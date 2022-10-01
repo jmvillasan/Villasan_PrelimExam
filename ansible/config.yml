@@ -1,0 +1,39 @@
+---
+- hosts: all
+  module_defaults:
+     ansible.builtin.file:
+        pip: python3-pip
+        python: python3
+  become: true
+  tasks:
+
+
+  - name: install python3, pip3, and java for Ubuntu
+    apt:
+     name:
+       - python3
+       - python3-pip
+       - default-jdk
+     state: latest
+    when: ansible_distribution in "Ubuntu"
+
+  - name: install python3,pip3, and java for CentOS
+    dnf:
+      name:
+        - python3
+        - python3-pip
+        - java-11-openjdk-devel
+      state: latest
+    when: ansible_distribution in "CentOS"
+
+  - name: Banner Motd
+    copy:
+       src: config.yml
+       dest: /etc/motd
+
+  - name: Creating a User with variable defined
+    ansible.builtin.user:
+          name: Villasan
+          uid: 1111
+          group: root
+          home: /home/villasan
